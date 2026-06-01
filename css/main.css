@@ -1,19 +1,28 @@
 body {
     background-color: #F7CACA;
     margin: 0;
-    height: 100vh; /* 화면 전체 높이 사용 */
+    height: 100vh;
+}
+
+.movelog{
+  width : 120px;
+  height : 60px;
+  background-color: #ffffff;
+  text-decoration: none;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  float: right;
 }
 
 .container {
     text-align: center;
+    margin-top: 400px;
 }
 
 .move {
     display: inline-block;
     width: 500px;
     height: 150px;
-    margin-top: 50px;
-    line-height: 150px;     /* 글자가 세로 가운데로 오게 함 */
+    line-height: 150px;     /* 글자가 세로 가운데로 오게 해씀 */
     font-size: 45px;
     font-weight: bold;
     background-color: #acbef1;
@@ -24,15 +33,12 @@ body {
     box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 
-.h1 {
-    width: 100%px;
+.span {
+    width: 100px;
     font-size: 80px;
-    text-align: center;
-    margin-left:auto;
-    margin-right:auto;
-    margin-top:80px;
+    font-weight: bold;
+    margin-left: 420px;
     font-family: sans-serif;
     color : rgb(26, 165, 165);
-
-
+    margin-top: 100px;
 }

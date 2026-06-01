@@ -9,7 +9,7 @@ function RollingNum(number) {
     const numSpan = document.createElement("span");
     numSpan.className = "num";
 
-    numSpan.innerHTML = `<span class="numList">${numbersHTML}</span>`; //다시보기
+    numSpan.innerHTML = `<span class="numList">${numbersHTML}</span>`;
     cntBox.appendChild(numSpan);
     numSpan.querySelector(".numList").style.transform = `translateY(${targetNum * -120}px)`;
   });
