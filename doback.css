@@ -1,0 +1,52 @@
+body {
+  margin: 0;
+  height: 100vh;
+  background-color: #F7CACA;
+}
+
+.move{
+  width : 70px;
+  height : 30px;
+  background-color: #cd83d8;
+  text-decoration: none;  /* 밑줄 제거 */
+  border-radius: 20px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.h1 {
+  width: 100%px;
+  font-size: 37px;
+  text-align: center;
+  margin-top:40px;
+}
+
+.slot-container {
+  text-align: center;
+}
+
+/* 슬롯 박스 하나 (숫자 한 칸) */
+.num {
+  display: inline-block;
+  width: 120px;
+  height: 120px;
+  overflow: hidden; /* 넘치는 숫자는 숨김 */
+  background-color: #92A8D1;
+  margin: 0 10px;
+}
+
+/* 세로로 정렬된 숫자 리스트 */
+.numList {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  font-size: 80px;
+  line-height: 120px;
+}
+
+#startBtn {
+  margin-top: 40px;
+  padding: 15px 40px;
+  font-size: 24px;
+  font-weight: bold;
+  background-color: #ff4757;
+}

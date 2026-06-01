@@ -1,0 +1,38 @@
+body {
+    background-color: #F7CACA;
+    margin: 0;
+    height: 100vh; /* 화면 전체 높이 사용 */
+}
+
+.container {
+    text-align: center;
+}
+
+.move {
+    display: inline-block;
+    width: 500px;
+    height: 150px;
+    margin-top: 50px;
+    line-height: 150px;     /* 글자가 세로 가운데로 오게 함 */
+    font-size: 45px;
+    font-weight: bold;
+    background-color: #acbef1;
+    color: white;
+    text-decoration: none;  /* 밑줄 제거 */
+    
+    border-radius: 20px;    /* 모서리를 둥글게 */
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.h1 {
+    width: 100%px;
+    font-size: 80px;
+    text-align: center;
+    margin-left:auto;
+    margin-right:auto;
+    margin-top:80px;
+    font-family: sans-serif;
+    color : rgb(26, 165, 165);
+
+
+}
