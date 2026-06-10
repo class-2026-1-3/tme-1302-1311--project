@@ -111,12 +111,17 @@ body{
 }
 
 .main-charge{
-    width: 85%;
-    height: 450px;
+    width: 88%;
+    height: 480px;
     background-color: black;
     margin-left: auto;
     margin-right: auto;
     display: block;
-    border-radius: 6px;
+    border-radius: 10px;
     border: 2px solid yellow;
+}
+
+.main-charge p{
+    color: gold;
+    font-size: 25px;
 }
