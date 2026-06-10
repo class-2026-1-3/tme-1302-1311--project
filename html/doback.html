@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BUCKSHOT ROULETTE - NAGDONG</title>
+    <style>
+        /* 벅샷 룰렛 특유의 어둡고 찌든 지하창고 분위기 CSS */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Courier New', Courier, monospace, sans-serif;
+        }
+
+        body {
+            background-color: #0a0c0a; /* 핏기 없는 극도의 다크 그린/블랙 */
+            color: #d1c7a3; /* 빛바랜 먼지 가득한 텍스트 색상 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        .table-container {
+            width: 100vw;
+            height: 100vh;
+            max-width: 1000px;
+            max-height: 700px;
+            background: radial-gradient(circle, #1a221a 0%, #050705 100%);
+            border: 4px solid #3a2e1d; /* 거친 나무 테이블 느낌 담기 */
+            box-shadow: inset 0 0 100px rgba(0,0,0,0.9), 0 0 50px rgba(0,0,0,0.8);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 30px;
+            position: relative;
+        }
+
+        /* 전광판 및 상태 표시 영역 */
+        .status-board {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px dashed #3a2e1d;
+            padding-bottom: 15px;
+        }
+
+        .hp-display {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #ff4444; /* 체력은 강렬한 레드 */
+            text-shadow: 0 0 10px rgba(255, 68, 68, 0.5);
+        }
+
+        .dealer-hp {
+            text-align: right;
+        }
+
+        /* 중앙 산탄총 & 실탄 현황판 무대 */
+        .shotgun-stage {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+        }
+
+        /* 현재 남은 총알 브리핑 박스 */
+        .ammo-briefing {
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid #5a4a33;
+            padding: 15px 30px;
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        .ammo-magazine {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            min-height: 40px;
+            align-items: center;
+        }
+
+        /* 총알 커스텀 그래픽 스타일 */
+        .bullet {
+            width: 18px;
+            height: 35px;
+            border-radius: 3px 3px 0 0;
+            position: relative;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+        }
+        .bullet.live {
+            background: linear-gradient(to right, #221212, #000000); /* 실탄: 빨강 */
+            border: 1px solid #ff4444;
+        }
+        .bullet.blank {
+            background: linear-gradient(to right, #1155cc, #0033aa); /* 공포탄: 파랑 */
+            border: 1px solid #4488ff;
+        }
+        .bullet::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 8px;
+            background: #d4af37; /* 탄피 황동색 넘버링 */
+            border-top: 1px solid #555;
+        }
+
+        /* 스릴 넘치는 액션 로그창 */
+        .action-log {
+            font-size: 1.4rem;
+            color: #ffcc00;
+            text-align: center;
+            min-height: 40px;
+            font-weight: bold;
+            text-shadow: 0 0 8px rgba(255,204,0,0.4);
+        }
+
+        /* 샷건 룰렛 격발 컨트롤러 */
+        .control-deck {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            border-top: 2px dashed #3a2e1d;
+            padding-top: 20px;
+        }
+
+        .trigger-btn {
+            background: #151a15;
+            color: #d1c7a3;
+            border: 2px solid #5a4a33;
+            padding: 15px 35px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: all 0.2s;
+        }
+
+        .trigger-btn:hover {
+            background: #d1c7a3;
+            color: #0a0c0a;
+            box-shadow: 0 0 15px rgba(209, 199, 163, 0.6);
+        }
+
+        .trigger-btn:active {
+            transform: scale(0.95);
+        }
+
+        .trigger-btn:disabled {
+            background: #050505;
+            color: #444;
+            border-color: #222;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        #btn-shoot-dealer {
+            border-color: #ff4444;
+            color: #ff4444;
+        }
+        #btn-shoot-dealer:hover {
+            background: #ff4444;
+            color: #000;
+            box-shadow: 0 0 15px rgba(255, 68, 68, 0.6);
+        }
+
+        /* 화면 번쩍이는 효과(피격 연출용) */
+        .flash-red {
+            animation: flash-red-anim 0.4s ease-out;
+        }
+        .flash-white {
+            animation: flash-white-anim 0.3s ease-out;
+        }
+
+        @keyframes flash-red-anim {
+            0% { background: #ff0000; }
+            100% { background: transparent; }
+        }
+        @keyframes flash-white-anim {
+            0% { background: #ffffff; }
+            100% { background: transparent; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="table-container" id="table">
+        <header class="status-board">
+            <div class="hp-display">YOU: <span id="player-hp">⚡ ⚡ ⚡</span></div>
+            <div style="font-size: 1.5rem; font-weight: bold; color: #5a4a33;">BUCKSHOT</div>
+            <div class="hp-display dealer-hp">DEALER: <span id="dealer-hp">⚡ ⚡ ⚡</span></div>
+        </header>
+
+        <main class="shotgun-stage">
+            <div class="ammo-briefing">
+                <div id="ammo-count-text">장전된 총알 현황 파악 중...</div>
+                <div class="ammo-magazine" id="magazine-view">
+                    </div>
+            </div>
+
+            <div class="action-log" id="log-text">
+                나무 테이블 위에 샷건이 놓여있습니다. 게임을 시작하세요.
+            </div>
+        </main>
+
+        <footer class="control-deck">
+            <button id="btn-shoot-me" class="trigger-btn" onclick="shoot(true)">자신을 쏜다</button>
+            <button id="btn-shoot-dealer" class="trigger-btn" onclick="shoot(false)">딜러를 쏜다</button>
+            <button id="btn-next-round" class="trigger-btn" onclick="initRound()" style="display: none; border-color: #ffcc00; color: #ffcc00;">다음 라운드 장전</button>
+            <button id="btn-exit" class="trigger-btn" onclick="exitGame()" style="display: none; border-color: #ff4444; color: #ff4444; margin-left: 10px;">나가기</button>
+        </footer>
+    </div>
+
+    <script>
+        let playerHp = 3;
+        let dealerHp = 3;
+        let magazine = []; // 실탄 공포탄 섞일 탄창 배열
+
+        const logText = document.getElementById('log-text');
+        const playerHpText = document.getElementById('player-hp');
+        const dealerHpText = document.getElementById('dealer-hp');
+        const ammoText = document.getElementById('ammo-count-text');
+        const magazineView = document.getElementById('magazine-view');
+        const table = document.getElementById('table');
+
+        const btnMe = document.getElementById('btn-shoot-me');
+        const btnDealer = document.getElementById('btn-shoot-dealer');
+        const btnNext = document.getElementById('btn-next-round');
+        const btnExit = document.getElementById('btn-exit');
+
+        // 게임 스타트 및 라운드 탄창 셔플 함수
+        function initRound() {
+            if (playerHp <= 0 || dealerHp <= 0) {
+                playerHp = 3;
+                dealerHp = 3;
+            }
+
+            btnNext.style.display = 'none';
+            btnExit.style.display = 'none';
+            btnMe.disabled = false;
+            btnDealer.disabled = false;
+
+            updateHpDisplay();
+
+            // 총알 무작위 장전 규칙 (총 4~6발 생성)
+            const totalBullets = Math.floor(Math.random() * 3) + 4; 
+            let liveCount = Math.floor(totalBullets / 2) + (Math.random() > 0.5 ? 1 : 0);
+            if (liveCount >= totalBullets) liveCount = totalBullets - 1;
+            if (liveCount <= 0) liveCount = 1;
+            let blankCount = totalBullets - liveCount;
+
+            ammoText.innerHTML = `실탄: <span style="color:#ff4444">${liveCount}</span> | 공포탄: <span style="color:#4488ff">${blankCount}</span>`;
+
+            // 배열에 담고 무작위 셔플
+            magazine = [];
+            for(let i=0; i<liveCount; i++) magazine.push('LIVE');
+            for(let i=0; i<blankCount; i++) magazine.push('BLANK');
+            magazine.sort(() => Math.random() - 0.5);
+
+            // 가시적인 하단 실탄 디스플레이 생성
+            magazineView.innerHTML = '';
+            magazine.forEach(() => {
+                const bView = document.createElement('div');
+                bView.className = 'bullet live'; // 처음엔 유저 눈에 다 실탄처럼 숨겨둠
+                magazineView.appendChild(bView);
+            });
+
+            logText.textContent = "철컥... 샷건에 탄환들이 임의 순서로 장전되었습니다.";
+            logText.style.color = "#ffcc00";
+        }
+
+        function updateHpDisplay() {
+            playerHpText.textContent = "⚡ ".repeat(Math.max(0, playerHp));
+            dealerHpText.textContent = "⚡ ".repeat(Math.max(0, dealerHp));
+        }
+
+        // 격발 함수 (targetIsMe: true면 본인 마인드셋, false면 딜러 타겟)
+        function shoot(targetIsMe) {
+            if (magazine.length === 0) return;
+
+            // 탄창 맨 위에서 한 발 꺼내기
+            const currentBullet = magazine.shift();
+            
+            // 시각적 매거진 총알 하나 제거
+            if (magazineView.lastChild) {
+                magazineView.removeChild(magazineView.lastChild);
+            }
+
+            btnMe.disabled = true;
+            btnDealer.disabled = true;
+
+            if (currentBullet === 'LIVE') {
+                // [실탄 명중 연출]
+                table.classList.add('flash-red');
+                setTimeout(() => table.classList.remove('flash-red'), 400);
+
+                if (targetIsMe) {
+                    playerHp--;
+                    logText.textContent = "💥 콰앙!! 자신에게 실탄을 격발했습니다! (-1 HP)";
+                    logText.style.color = "#ff4444";
+                } else {
+                    dealerHp--;
+                    logText.textContent = "💥 타앙!! 딜러에게 실탄을 명중시켰습니다! (-1 HP)";
+                    logText.style.color = "#44ff44";
+                }
+                updateHpDisplay();
+                
+                // 게임 오버 혹은 생존 시 다음 스텝 유도
+                if (checkGameOver()) return;
+                
+                // 실탄을 쏘면 누구를 쐈든 무조건 턴이 넘어가거나 유지되는 딜러 패턴 타이머 작동
+                setTimeout(dealerTurn, 1800);
+
+            } else {
+                // [공포탄 불발 연출]
+                table.classList.add('flash-white');
+                setTimeout(() => table.classList.remove('flash-white'), 300);
+
+                if (targetIsMe) {
+                    logText.textContent = "틱- 빈 소리만 납니다! 공포탄입니다. (턴을 한 번 더 획득!)";
+                    logText.style.color = "#4488ff";
+                    setTimeout(() => {
+                        btnMe.disabled = false;
+                        btnDealer.disabled = false;
+                    }, 1200);
+                } else {
+                    logText.textContent = "틱- 딜러에게 쏜 총은 공포탄이었습니다. 턴이 넘어갑니다.";
+                    logText.style.color = "#aaaaaa";
+                    setTimeout(dealerTurn, 1800);
+                }
+            }
+        }
+
+        // 인공지능 딜러의 턴 (심리전 엔진)
+        function dealerTurn() {
+            if (magazine.length === 0) {
+                logText.textContent = "남은 총알이 없습니다. 총알을 장전하세요.";
+                btnNext.style.display = 'block';
+                return;
+            }
+
+            logText.textContent = "딜러가 서서히 총을 집어 듭니다...";
+            logText.style.color = "#e57373";
+
+            setTimeout(() => {
+                // 남아있는 탄알 계산식 바탕으로 지능적 격발 타겟팅 결정
+                // (만약 실탄 확률이 압도적으로 높으면 유저를 쏘고, 낮으면 도박으로 자신을 쏨)
+                const shouldShootPlayer = Math.random() > 0.4; 
+
+                const currentBullet = magazine.shift();
+                if (magazineView.lastChild) magazineView.removeChild(magazineView.lastChild);
+
+                if (shouldShootPlayer) {
+                    logText.textContent = "딜러가 총구를 당신에게 겨누고 방아쇠를 당깁니다!!";
+                    
+                    setTimeout(() => {
+                        if (currentBullet === 'LIVE') {
+                            table.classList.add('flash-red');
+                            setTimeout(() => table.classList.remove('flash-red'), 400);
+                            playerHp--;
+                            logText.textContent = "💥 쿠구궁!! 딜러가 쏜 실탄에 정통으로 맞았습니다! (-1 HP)";
+                            logText.style.color = "#ff4444";
+                        } else {
+                            table.classList.add('flash-white');
+                            setTimeout(() => table.classList.remove('flash-white'), 300);
+                            logText.textContent = "틱! 다행히 공포탄입니다. 주도권이 당신에게 돌아옵니다.";
+                            logText.style.color = "#44ff44";
+                        }
+                        updateHpDisplay();
+                        
+                        if (checkGameOver()) return;
+                        nextTurnOrRound();
+                    }, 1500);
+
+                } else {
+                    logText.textContent = "딜러가 잠시 고민하더니 총구를 자신의 머리에 겨눕니다..";
+                    
+                    setTimeout(() => {
+                        if (currentBullet === 'LIVE') {
+                            table.classList.add('flash-red');
+                            setTimeout(() => table.classList.remove('flash-red'), 400);
+                            dealerHp--;
+                            logText.textContent = "💥 퍼억!! 딜러가 실탄 자폭을 감행했습니다! (-1 HP)";
+                            logText.style.color = "#44ff44";
+                            updateHpDisplay();
+                            if (checkGameOver()) return;
+                            nextTurnOrRound();
+                        } else {
+                            table.classList.add('flash-white');
+                            setTimeout(() => table.classList.remove('flash-white'), 300);
+                            logText.textContent = "틱! 공포탄이었습니다. 보너스 턴으로 딜러가 다시 총을 쏩니다!";
+                            logText.style.color = "#ff4444";
+                            setTimeout(dealerTurn, 1800); // 자신에게 공포탄 쏘면 딜러 턴 무한 지속
+                        }
+                    }, 1500);
+                }
+            }, 1200);
+        }
+
+        function nextTurnOrRound() {
+            setTimeout(() => {
+                if (magazine.length === 0) {
+                    logText.textContent = "탄창이 비었습니다. 다음 탄알들을 장전해야 합니다.";
+                    btnNext.style.display = 'block';
+                } else {
+                    btnMe.disabled = false;
+                    btnDealer.disabled = false;
+                    logText.textContent = "당신의 차례입니다. 선택하십시오.";
+                    logText.style.color = "#ffcc00";
+                }
+            }, 1000);
+        }
+
+        function checkGameOver() {
+            if (playerHp <= 0) {
+                logText.textContent = "💀 당신은 지하 매치에서 패배했습니다. 게임 오버.";
+                logText.style.color = "#ff0000";
+                btnNext.textContent = "처음부터 다시 도전";
+                btnNext.style.display = 'block';
+                btnExit.style.display = 'block';
+                return true;
+            }
+            if (dealerHp <= 0) {
+                logText.textContent = "🏆 축하합니다! 딜러를 쓰러뜨리고 상금을 차지했습니다!";
+                logText.style.color = "#44ff44";
+                btnNext.textContent = "새 게임 시작";
+                btnNext.style.display = 'block';
+                btnExit.style.display = 'block';
+                return true;
+            }
+            return false;
+        }
+        function exitGame() {
+            if (confirm("게임을 종료하고 나가시겠습니까?")) {
+                location.href = 'http://127.0.0.1:5501/html/mmain.html';
+            }
+        }
+        // 브라우저 켜지자마자 첫 번째 판 자동 셋업
+        window.onload = initRound;
+    </script>
+</body>
+</html>
