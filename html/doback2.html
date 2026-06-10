@@ -1,41 +1,318 @@
 <!DOCTYPE html>
 <html lang="ko">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>낙동랜드 - 룰렛 게임</title>
-    <link rel="stylesheet" href="../css/doback2.css" />
-  </head>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NAGDONG LAND</title>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial Black', 'Malgun Gothic', sans-serif;
+        }
 
-  <body>
-    <button class="move"><a href="./mmain.html">나가기</a></button>
+        body {
+            background-color: #000000 !important; 
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
 
-    <div class="roulette-container">
-      <h1 class="h1">
-        🎡 LUCKY ROULETTE 🎡
-      </h1>
+        .game-screen {
+            width: 100vw;
+            height: 100vh;
+            max-width: 1280px;
+            max-height: 720px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 20px;
+            background-color: #000000;
+        }
 
-      <div class="roulette-wrap">
-        <div class="roulette-pin"></div>
-        <div class="roulette-board">
-          <div class="item-top">
-            대박
-          </div>
-          <div class="item-bottom">
-            500P
-          </div>
-          <div class="item-left">
-            100P
-          </div>
-          <div class="item-right">
-            꽝
-          </div>
-        </div>
-      </div>
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
 
-      <button id="startBtn">
-        SPIN
-      </button>
+        .header-left-space {
+            width:
+        }
+
+        .neon-board {
+            border: 3px solid #ffffff;
+            padding: 8px 35px;
+            border-radius: 12px;
+            background-color: #050505;
+            box-shadow: 
+                0 0 8px #ffffff,
+                inset 0 0 8px #ffffff,
+                0 0 15px #f3c65f,
+                inset 0 0 15px #f3c65f;
+        }
+
+        .neon-text {
+            font-size: 2.2rem;
+            color: #ffffff;
+            letter-spacing: 3px;
+            font-weight: 900;
+            text-align: center;
+            text-shadow:
+                0 0 4px #ffffff,
+                0 0 10px #ffffff,
+                0 0 18px #f3c65f,
+                0 0 35px #f3c65f,
+                0 0 65px #f3c65f;
+            animation: neon-flicker 2.5s infinite alternate;
+        }
+
+        .header-right-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            width: 260px;
+            justify-content: flex-end;
+        }
+
+        .profile-chip {
+            display: flex;
+            align-items: center;
+            background-color: #141414;
+            border: 1px solid #2b2b2b;
+            padding: 6px 14px;
+            border-radius: 8px;
+            gap: 10px;
+        }
+
+        .avatar {
+            width: 32px;
+            height: 32px;
+            background-color: #333;
+            border-radius: 50%;
+            border: 1px solid #f3c65f;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23f3c65f"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5-4-8-4z"/></svg>');
+            background-size: 75%;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .username {
+            font-size: 0.8rem;
+            color: #bbbbbb;
+            font-weight: bold;
+        }
+
+        .coin-wrap {
+            font-size: 0.95rem;
+            color: #f3c65f;
+            font-weight: bold;
+        }
+
+        .exit-btn {
+            background-color: #f3c65f;
+            color: #000000;
+            border: none;
+            padding: 9px 15px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+
+        /* [3] 메인 센터 룰렛 구역 & 바늘 포인터 */
+        .roulette-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .wheel-box {
+            position: relative;
+            width: 450px;
+            height: 450px;
+        }
+
+        /* 12시 정각 화살표 바늘 */
+        .wheel-arrow {
+            position: absolute;
+            top: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 14px solid transparent;
+            border-right: 14px solid transparent;
+            border-top: 26px solid #d92323; 
+            z-index: 10;
+        }
+
+        #roulette-wheel {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* [4] 하단 레이아웃 스타일 */
+        .betting-footer {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .bet-title {
+            color: #ffffff;
+            font-size: 0.95rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .control-panel {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .input-container {
+            display: flex;
+            background-color: #0a0a0a;
+            border: 1px solid #2a2a2a;
+            border-radius: 6px;
+            overflow: hidden;
+            height: 46px;
+            align-items: center;
+        }
+
+        .input-container input {
+            background: transparent;
+            border: none;
+            color: #ffffff;
+            padding: 0 15px;
+            width: 130px;
+            font-size: 1rem;
+            outline: none;
+            font-weight: bold;
+        }
+
+        .sub-btn {
+            background-color: #1a1a1a;
+            color: #aaaaaa;
+            border: none;
+            border-left: 1px solid #2a2a2a;
+            width: 50px;
+            height: 100%;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+
+        .main-spin-btn {
+            background-color: #f3c65f;
+            color: #000000;
+            border: none;
+            height: 46px;
+            padding: 0 28px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .ticker-box {
+            flex: 1;
+            border: 1px dashed #f3c65f;
+            height: 46px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            color: #f3c65f;
+            font-size: 0.9rem;
+            background-color: rgba(243, 198, 95, 0.02);
+        }
+
+        /* 전광판 네온 깜빡임 애니메이션 효과 */
+        @keyframes neon-flicker {
+            0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+                text-shadow:
+                    0 0 4px #fff,
+                    0 0 10px #fff,
+                    0 0 18px #f3c65f,
+                    0 0 35px #f3c65f,
+                    0 0 65px #f3c65f;
+            }
+            20%, 24%, 55% {        
+                text-shadow: none;
+                color: #222222;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="game-screen">
+        <header class="game-header">
+            <div class="header-left-space"></div>
+            
+            <div class="neon-board">
+                <h1 class="neon-text">NAGDONG LAND</h1>
+            </div>
+
+            <div class="header-right-profile">
+                <div class="profile-chip">
+                    <div class="avatar"></div>
+                    <div class="user-data">
+                        <div class="username">낙동회원</div>
+                        <div class="coin-wrap">
+                            <span class="coin-icon">💰</span>
+                            <span id="user-coins">1,000</span>
+                        </div>
+                    </div>
+                </div>
+                <button class="exit-btn"><a href="http://127.0.0.1:5500/html/mmain.html"> 나가기 </a></button>
+            </div>
+        </header>
+
+        <main class="roulette-container">
+            <div class="wheel-box">
+                <div class="wheel-arrow"></div>
+                <canvas id="roulette-wheel" width="450" height="450"></canvas>
+            </div>
+        </main>
+
+        <footer class="betting-footer">
+            <div class="bet-title">
+                <span class="crown">👑</span> 코인 충전 금액 선택
+            </div>
+            
+            <div class="control-panel">
+                <div class="input-container">
+                    <input type="number" id="bet-amount" value="100" min="10" placeholder="코인 금액">
+                    <button id="btn-min" class="sub-btn">최조</button>
+                    <button id="btn-plus" class="sub-btn">+</button>
+                </div>
+
+                <button id="spin-btn" class="main-spin-btn">지금 바로 도전하기 ❯</button>
+
+                <div id="result-message" class="ticker-box">
+                    로젯은 대박 5속이 있습니다.
+                </div>
+            </div>
+        </footer>
     </div>
-  </body>
+
+    <script src="../doback2.js"></script>
+</body>
 </html>
