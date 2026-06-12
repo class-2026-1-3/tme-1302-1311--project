@@ -6,12 +6,15 @@
 
 body{
     background:black;
+    color:white;
+    font-family:sans-serif;
 }
+
+/* 상단바 */
 
 .charge-box{
     width:100%;
     height:90px;
-
     background:black;
     border-bottom:2px solid gold;
 
@@ -29,53 +32,45 @@ body{
     letter-spacing:2px;
 }
 
-.main-btn{
-    background:gold;
-    color:black;
-
-    border:none;
-    border-radius:10px;
-
-    padding:12px 20px;
-
-    font-size:16px;
-    font-weight:bold;
-
-    cursor:pointer;
-
-    transition:.3s;
-}
-
-.main-btn:hover{
-    transform:scale(1.05);
-
-    box-shadow:
-    0 0 10px gold,
-    0 0 20px gold;
-}
-
-.main-btn i{
-    margin-right:8px;
-}
-
 .right-menu{
     display:flex;
     align-items:center;
     gap:20px;
 }
 
+.main-btn{
+    background:gold;
+    color:black;
+    border:none;
+    border-radius:10px;
+    padding:12px 20px;
+    font-size:16px;
+    font-weight:bold;
+    cursor:pointer;
+    transition:.3s;
+}
+
+.main-btn:hover{
+    transform:scale(1.05);
+    box-shadow:0 0 10px gold;
+}
+
+.main-btn i{
+    margin-right:8px;
+}
+
+/* 유저 정보 */
+
 .user-box{
     display:flex;
     align-items:center;
     gap:12px;
 
-    color:white;
-
     background:#111;
     border:1px solid #333;
+    border-radius:10px;
 
     padding:8px 15px;
-    border-radius:10px;
 }
 
 .user-box img{
@@ -91,11 +86,6 @@ body{
     flex-direction:column;
 }
 
-.user-info strong{
-    color:white;
-    font-size:15px;
-}
-
 .user-info p{
     color:#aaa;
     font-size:13px;
@@ -106,22 +96,337 @@ body{
     font-weight:bold;
 }
 
-.charge-banner{
-    width: 70px;
+/* 배너 */
+
+.charge-banner img{
+    width:100%;
+    display:block;
 }
+
+/* 전체 레이아웃 */
+
+.charge-container{
+    width:95%;
+    margin:30px auto;
+
+    display:grid;
+    grid-template-columns:2.3fr 1fr;
+    gap:25px;
+}
+
+/* 왼쪽 충전영역 */
 
 .main-charge{
-    width: 88%;
-    height: 480px;
-    background-color: black;
-    margin-left: auto;
-    margin-right: auto;
-    display: block;
-    border-radius: 10px;
-    border: 2px solid yellow;
+    background:black;
+    border:2px solid gold;
+    border-radius:15px;
+    padding:30px;
 }
 
-.main-charge p{
-    color: gold;
-    font-size: 25px;
+.main-charge h2{
+    text-align:center;
+    color:gold;
+    margin-bottom:30px;
+    font-size:32px;
+}
+
+/* 카드 배치 */
+
+.coin-list{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:20px;
+}
+
+/* 카드 */
+
+.check-box{
+    background:#111;
+
+    border:2px solid gold;
+    border-radius:15px;
+
+    overflow:hidden;
+
+    height:280px;
+
+    cursor:pointer;
+
+    transition:.3s;
+}
+
+.check-box:hover{
+    transform:translateY(-5px);
+    box-shadow:0 0 15px gold;
+}
+
+/* 이미지가 카드 전체 채움 */
+
+.check-box img{
+    width:100%;
+    height:100%;
+
+    object-fit:cover;
+
+    display:block;
+}
+
+/* 코인 수 */
+
+.check-box h3{
+    font-size:18px;
+    margin-bottom:8px;
+    color:white;
+}
+
+/* 가격 */
+
+.check-box span{
+    color:gold;
+    font-size:16px;
+    font-weight:bold;
+}
+
+/* 충전 버튼 */
+
+.check-box button{
+    width:100%;
+    height:42px;
+
+    margin-top:auto;
+
+    background:gold;
+    color:black;
+
+    border:none;
+    border-radius:8px;
+
+    font-size:15px;
+    font-weight:bold;
+
+    cursor:pointer;
+
+    transition:.3s;
+}
+
+.check-box button:hover{
+    transform:scale(1.02);
+}
+
+/* 오른쪽 결제영역 */
+
+.charge-right{
+    background:black;
+
+    border:2px solid gold;
+    border-radius:15px;
+
+    padding:25px;
+}
+
+.charge-right h2{
+    color:gold;
+    margin-bottom:20px;
+}
+
+.pay-box{
+    height:70px;
+
+    display:flex;
+    align-items:center;
+    gap:15px;
+
+    padding-left:20px;
+
+    border:2px solid #333;
+    border-radius:10px;
+
+    margin-bottom:15px;
+
+    font-size:20px;
+
+    transition:.3s;
+}
+
+.pay-box:hover{
+    border-color:gold;
+    cursor:pointer;
+}
+
+.pay-box i{
+    font-size:24px;
+}
+
+.pay-btn{
+    width:100%;
+    height:60px;
+
+    margin-top:20px;
+
+    background:gold;
+    color:black;
+
+    border:none;
+    border-radius:10px;
+
+    font-size:22px;
+    font-weight:bold;
+
+    cursor:pointer;
+
+    transition:.3s;
+}
+
+.pay-btn:hover{
+    transform:scale(1.02);
+}
+
+/* 오른쪽 결제영역 */
+
+.charge-right{
+    background:black;
+    border:2px solid gold;
+    border-radius:15px;
+    padding:25px;
+}
+
+.charge-right h2{
+    color:gold;
+    margin-bottom:20px;
+
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+/* 선택 상품 */
+
+.selected-info{
+    border:2px solid gold;
+    border-radius:12px;
+    padding:15px;
+    text-align:center;
+    margin-bottom:20px;
+    background:#111;
+}
+
+.selected-info p{
+    color:#aaa;
+    margin-bottom:8px;
+}
+
+.selected-info strong{
+    display:block;
+    color:gold;
+    font-size:28px;
+}
+
+.selected-info span{
+    color:white;
+    font-size:18px;
+}
+
+/* 결제 방식 */
+
+.pay-box{
+    height:80px;
+
+    display:flex;
+    align-items:center;
+    gap:15px;
+
+    padding:0 20px;
+
+    border:2px solid #333;
+    border-radius:12px;
+
+    margin-bottom:15px;
+
+    font-size:22px;
+
+    background:#111;
+
+    transition:.3s;
+}
+
+.pay-box:hover{
+    border-color:gold;
+    cursor:pointer;
+}
+
+.pay-box.active{
+    border:2px solid gold;
+    background:rgba(255,215,0,.08);
+
+    box-shadow:0 0 15px rgba(255,215,0,.2);
+}
+
+.pay-box i{
+    font-size:28px;
+}
+
+.check-circle{
+    margin-left:auto;
+
+    width:36px;
+    height:36px;
+
+    border-radius:50%;
+
+    background:gold;
+    color:black;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    font-size:18px;
+}
+
+.empty-circle{
+    margin-left:auto;
+
+    width:36px;
+    height:36px;
+
+    border-radius:50%;
+
+    border:2px solid #555;
+}
+
+/* 결제 버튼 */
+
+.pay-btn{
+    width:100%;
+    height:75px;
+
+    margin-top:20px;
+
+    background:linear-gradient(
+        180deg,
+        #ffd700,
+        #e2a900
+    );
+
+    color:black;
+
+    border:none;
+    border-radius:12px;
+
+    font-size:30px;
+    font-weight:bold;
+
+    cursor:pointer;
+
+    transition:.3s;
+}
+
+.pay-btn:hover{
+    transform:scale(1.02);
+    box-shadow:0 0 20px rgba(255,215,0,.4);
+}
+
+.check-box.selected{
+    border:3px solid gold;
+    box-shadow:0 0 20px gold;
 }
